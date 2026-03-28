@@ -1,0 +1,8 @@
+SELECT DISTINCT ?g
+WHERE {
+  GRAPH ?g {
+    ?s ?p ?o .
+  }
+  FILTER STRSTARTS(STR(?g), "http://rdf.glytoucan.org/partner/")
+}
+ORDER BY ?g

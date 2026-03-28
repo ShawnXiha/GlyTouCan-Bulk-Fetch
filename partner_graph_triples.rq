@@ -1,0 +1,6 @@
+SELECT ?s ?p ?o
+WHERE {
+  GRAPH <__GRAPH_URI__> {
+    ?s ?p ?o .
+  }
+}

@@ -1,0 +1,33 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX glycan: <http://purl.jp/bio/12/glyco/glycan#>
+PREFIX glytoucan: <http://www.glytoucan.org/glyco/owl/glytoucan#>
+
+SELECT DISTINCT ?Saccharide ?AccNum ?Date ?WurcsSeq ?CtSeq
+WHERE {
+  GRAPH <http://rdf.glytoucan.org/core> {
+    ?Saccharide glytoucan:has_primary_id ?AccNum .
+    ?Saccharide glycan:has_resource_entry ?ResEntry .
+    ?ResEntry glytoucan:date_registered ?Date .
+  }
+  OPTIONAL {
+    GRAPH <http://rdf.glytoucan.org/sequence/wurcs> {
+      ?Saccharide glycan:has_glycosequence ?GSeqW .
+      ?GSeqW glycan:has_sequence ?WurcsSeq .
+      ?GSeqW glycan:in_carbohydrate_format glycan:carbohydrate_format_wurcs .
+    }
+  }
+  OPTIONAL {
+    GRAPH <http://rdf.glytoucan.org/sequence/glycoct> {
+      ?Saccharide glycan:has_glycosequence ?GSeqC .
+      ?GSeqC glycan:has_sequence ?CtSeq .
+      ?GSeqC glycan:in_carbohydrate_format glycan:carbohydrate_format_glycoct .
+    }
+  }
+  FILTER NOT EXISTS {
+    GRAPH <http://rdf.glytoucan.org/archive> {
+      ?Saccharide rdf:type ?x .
+    }
+  }
+  __AFTER_ACCNUM_FILTER__
+}
+ORDER BY ?AccNum
